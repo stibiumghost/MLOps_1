@@ -1,0 +1,6 @@
+[core]
+    remote = ssh-storage
+['remote "ssh-storage"']
+    url = ssh://dataSrv@192.168.56.104/datasets
+    user = dataSrv
+    port = 22
