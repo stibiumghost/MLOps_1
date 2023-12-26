@@ -1,0 +1,5 @@
+outs:
+- md5: f8c64e63aed386adab87959e9e501435
+  size: 71698
+  hash: md5
+  path: exams.csv
