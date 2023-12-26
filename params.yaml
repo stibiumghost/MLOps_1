@@ -1,0 +1,6 @@
+split:
+  split_ratio: 0.3
+
+train:
+  n_jobs: 2
+  fit_intercept: True

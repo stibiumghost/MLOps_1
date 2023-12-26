@@ -1,0 +1,79 @@
+schema: '2.0'
+stages:
+  data-processing:
+    cmd: python3 scripts/data_scripts/data_processing.py data/raw/exams.csv
+    deps:
+    - path: data/raw/exams.csv
+      hash: md5
+      md5: f8c64e63aed386adab87959e9e501435
+      size: 71698
+    - path: scripts/data_scripts/data_processing.py
+      hash: md5
+      md5: a4e633d499b009c26889c4225d6b8ee0
+      size: 849
+    outs:
+    - path: data/stage1
+      hash: md5
+      md5: d5d6262c52ab404f24579a354be1975a.dir
+      size: 19106
+      nfiles: 1
+  split:
+    cmd: python3 scripts/data_scripts/train_test_split.py data/stage1/exams.csv
+    deps:
+    - path: data/stage1/exams.csv
+      hash: md5
+      md5: b6c3be0a5e855ec54e6ba477da7a08ea
+      size: 19106
+    - path: scripts/data_scripts/train_test_split.py
+      hash: md5
+      md5: 1c683711c5e8768fb8dfbbb1e9d1202a
+      size: 1064
+    params:
+      params.yaml:
+        split.split_ratio: 0.3
+    outs:
+    - path: data/stage2
+      hash: md5
+      md5: 9a796dd13dec12babc4c62bbeab66b44.dir
+      size: 19180
+      nfiles: 2
+  train:
+    cmd: python3 scripts/model_scripts/dt.py data/stage2/train.csv model.pkl
+    deps:
+    - path: data/stage2/train.csv
+      hash: md5
+      md5: 6a468f9550d3e8105d61d18ca2f671ac
+      size: 13399
+    - path: scripts/model_scripts/dt.py
+      hash: md5
+      md5: 472529672c024243f8b42f05636d24fd
+      size: 920
+    params:
+      params.yaml:
+        train.fit_intercept: true
+        train.n_jobs: 2
+    outs:
+    - path: models/model.pkl
+      hash: md5
+      md5: 18b015e8c97bf3a83dfdcb965ef051db
+      size: 683
+  evaluate:
+    cmd: python3 scripts/model_scripts/evaluate.py data/stage2/test.csv models/model.pkl
+    deps:
+    - path: data/stage2/test.csv
+      hash: md5
+      md5: 8c465a378fcd9fe661eb9d15c2b5fcb5
+      size: 5781
+    - path: models/model.pkl
+      hash: md5
+      md5: 18b015e8c97bf3a83dfdcb965ef051db
+      size: 683
+    - path: scripts/model_scripts/evaluate.py
+      hash: md5
+      md5: 4a1f703a18bc15db4b381ac4f38faeb7
+      size: 591
+    outs:
+    - path: evaluate/score.json
+      hash: md5
+      md5: 0938da2b4b80be12c4843efd1b939396
+      size: 29
